@@ -53,14 +53,16 @@ const argsReader = (stream, isRoot = false) => {
 
   // chbuf/resultを破壊的に変更したいがためにレキシカルクロージャに…😭
   const finalizeArg = () => {
-    args.push(chbuf.join(''));
+    if (chbuf.length > 0) {
+      args.push(chbuf.join(''));
+      chbuf = [];
+    }
     // （トップレベルでない）一個しかないパラメータをリストとするのは冗長なのでunpackする
     if (isRoot || args.length > 1) {
       result.push(args);
-    } else {
+    } else if (args.length !== 0) {
       result.push(args[0]);
     }
-    chbuf = [];
     args = [];
   };
 
@@ -77,8 +79,10 @@ const argsReader = (stream, isRoot = false) => {
   // `#`のときの処理
   const sharpReader = (stream) => {
     stream.read();
-    args.push(chbuf.join(''));
-    chbuf = [];
+    if (chbuf.length > 0) {
+      args.push(chbuf.join(''));
+      chbuf = [];
+    }
     if (ch !== null || ch !== '.') {
       stream.read();
       const markup = sharpdotReader(stream);
