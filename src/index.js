@@ -43,26 +43,28 @@ const sharpdotReader = (stream) => {
   if (stream.read() === null) {
     throw Error('unexpected end while parsing expression');
   }
-  return [LAMBDA, name, ...rootReader(stream)];
+  return [LAMBDA, name, ...argsReader(stream)];
 };
 
-const rootReader = (stream, isRoot = false) => {
-  let chbuf = [];
-  let result = [];
-  let arg = [];
+const argsReader = (stream, isRoot = false) => {
+  let chbuf = [],
+      args = [],
+      result = [];
 
   // chbuf/resultを破壊的に変更したいがためにレキシカルクロージャに…😭
   const finalizeArg = () => {
-    arg.push(chbuf.join(''));
-    chbuf = [];
-    if (arg.length > 1) {
-      result = [...result, ...arg];
+    args.push(chbuf.join(''));
+    // （トップレベルでない）一個しかないパラメータをリストとするのは冗長なのでunpackする
+    if (isRoot || args.length > 1) {
+      result.push(args);
     } else {
-      result.push(arg[0]);
+      result.push(args[0]);
     }
-    arg = [];
+    chbuf = [];
+    args = [];
   };
 
+  // `;`や`]`のときの処理
   const flush = () => {
     if (isRoot) {
       chbuf.push(stream.read());
@@ -72,9 +74,10 @@ const rootReader = (stream, isRoot = false) => {
     }
   };
 
+  // `#`のときの処理
   const sharpReader = (stream) => {
     stream.read();
-    arg.push(chbuf.join(''));
+    args.push(chbuf.join(''));
     chbuf = [];
     if (ch !== null || ch !== '.') {
       stream.read();
@@ -82,14 +85,14 @@ const rootReader = (stream, isRoot = false) => {
       if (typeof markup === 'string') {
         chbuf.push(markup);
       } else {
-        arg.push(markup);
+        args.push(markup);
       }
     } else {
       chbuf.push('#');
     }
   };
 
-  // rootReaderのメイン処理
+  // argsReaderのメイン処理
   let ch = stream.peek();
   while (ch !== null) {
     switch (ch) {
@@ -112,8 +115,9 @@ const rootReader = (stream, isRoot = false) => {
 };
 
 export const parse = (str) => {
-  const result = rootReader(new CharacterStream(str), true);
-  console.log(result);
+  // トップレベルの文字列も1個だけのパラメータとして扱っている
+  // argsReaderはパラメータリストを返すので、トップレベルだけ0番目を取り出している
+  const result = argsReader(new CharacterStream(str), true)[0];
   return result.length === 0 ? [''] : result;
 };
 
