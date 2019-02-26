@@ -6,9 +6,11 @@ import {
 
 const testRenderer = {
   ...DEFAULT_RENDERER,
+  // レンダー関数のつくりかた
   'empty': () => '',
   'arity1': (arg) => `${arg}`,
   'arity2': (arg1, arg2) => `${arg1},${arg2}`,
+  // 再帰的レンダリング
   'rec': (arg) => ('__' + render(arg, testRenderer) + '__'),
 };
 
