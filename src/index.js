@@ -33,15 +33,20 @@ export class CharacterStream {
 }
 
 export const LAMBDA = Symbol('lambda');
+export class MmlError extends Error {};
+
+export class MmlParseError extends MmlError {};
+export class MmlMarkupHasNoNameError extends MmlError {};
+export class MmlUnexpectedEndOfStringError extends MmlError {};
 
 const sharpdotReader = (stream) => {
   let name = stream.readTo('[');
   if (name.length === 0) {
     // 名前が0文字なのでエラー
-      throw Error('empty name');
+      throw new MmlMarkupHasNoNameError();
   }
   if (stream.read() === null) {
-    throw Error('unexpected end while parsing expression');
+    throw new MmlUnExpectedEndOfStringError('');
   }
   return [LAMBDA, name, ...argsReader(stream)];
 };
@@ -83,7 +88,12 @@ const argsReader = (stream, isRoot = false) => {
       args.push(chbuf.join(''));
       chbuf = [];
     }
-    if (ch !== null || ch !== '.') {
+    let ch = stream.peek();
+    if (ch === null || ch === '#') {
+      chbuf.push('#');
+    } else if (ch !== '.') {
+      chbuf.push('#' + stream.read());
+    } else {
       stream.read();
       const markup = sharpdotReader(stream);
       if (typeof markup === 'string') {
@@ -91,8 +101,6 @@ const argsReader = (stream, isRoot = false) => {
       } else {
         args.push(markup);
       }
-    } else {
-      chbuf.push('#');
     }
   };
 
