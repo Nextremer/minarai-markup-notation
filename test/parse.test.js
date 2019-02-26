@@ -4,7 +4,7 @@ import {
   MmlUnexpectedEndOfStringError,
   MmlUnmatchedBracketError,
   parse
-} from 'minarai-markup-notation';
+} from '../src/parser';
 
 test('ただの文字列', () => {
   expect(parse('')).toEqual(['']);
