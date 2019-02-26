@@ -5,17 +5,17 @@ import {
   MmlUnmatchedBracketError,
   parse
 } from './parser';
-
-export const DEFAULT_RENDERER = {
-};
-
-export const render = (result, renderer = DEFAULT_RENDERER) => {
-};
+import {
+  DEFAULT_RENDERER,
+  render
+} from './renderer';
 
 module.exports = {
   MmlParseError,
   MmlMarkupHasNoNameError,
   MmlUnexpectedEndOfStringError,
   MmlUnmatchedBracketError,
-  parse
+  parse,
+  DEFAULT_RENDERER,
+  render
 };
