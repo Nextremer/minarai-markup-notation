@@ -2,6 +2,7 @@ import { LAMBDA } from '../src/constants';
 import {
   MmlMarkupHasNoNameError,
   MmlUnexpectedEndOfStringError,
+  MmlUnmatchedBracketError,
   parse
 } from 'minarai-markup-notation';
 
@@ -58,12 +59,25 @@ test('構文上のコーナーケースのテスト', () => {
   expect(parse('シャープのみ#です')).toEqual(['シャープのみ', '#です']);
   expect(parse('シャープと別の文字#:')).toEqual(['シャープと別の文字', '#:']);
 
-  expect(() => parse('シャープドットのみ#.')).toThrowError(MmlMarkupHasNoNameError);
-
   expect(parse('シャープ連続##.tel[0120-444-444]'))
   .toEqual(['シャープ連続', '#', [LAMBDA, 'tel', '0120-444-444']]);
 
+  expect(parse('おもむろにセミコロン;')).toEqual(['おもむろにセミコロン;']);
+
+  expect(parse('角括弧閉じすぎてる1]')).toEqual(['角括弧閉じすぎてる1]']);
+  expect(parse('角括弧閉じすぎてる2]です')).toEqual(['角括弧閉じすぎてる2]です']);
+  expect(parse('角括弧閉じすぎてる3#.tooclosed[あああ]]'))
+  .toEqual(['角括弧閉じすぎてる3',
+            [LAMBDA, 'tooclosed', 'あああ'], ']']);
 });
 
 test('errors', () => {
+  expect(() => parse('シャープドットのみ#.')).toThrow(MmlMarkupHasNoNameError);
+  expect(() => parse('シャープドットのみ#.です')).toThrow(MmlUnexpectedEndOfStringError);
+
+  expect(() => parse('角括弧始まってすらいない#.unopend')).toThrow(MmlUnexpectedEndOfStringError);
+
+  expect(() => parse('角括弧閉じてない1#.unclosed[')).toThrow(MmlUnexpectedEndOfStringError)
+  expect(() => parse('角括弧閉じてない2#.unclosed[#.closed[]')).toThrow(MmlUnexpectedEndOfStringError)
+  expect(() => parse('角括弧閉じてない3#.unclosed[あいうえお;か')).toThrow(MmlUnexpectedEndOfStringError)
 });

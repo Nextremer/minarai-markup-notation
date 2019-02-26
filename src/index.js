@@ -2,8 +2,9 @@ import { LAMBDA, MmlError } from './constants';
 import { CharacterStream } from './streams';
 
 export class MmlParseError extends MmlError {};
-export class MmlMarkupHasNoNameError extends MmlError {};
-export class MmlUnexpectedEndOfStringError extends MmlError {};
+export class MmlMarkupHasNoNameError extends MmlParseError {};
+export class MmlUnexpectedEndOfStringError extends MmlParseError {};
+export class MmlUnmatchedBracketError extends MmlParseError {};
 
 const sharpdotReader = (stream) => {
   let name = stream.readTo('[');
@@ -12,9 +13,13 @@ const sharpdotReader = (stream) => {
       throw new MmlMarkupHasNoNameError();
   }
   if (stream.read() === null) {
-    throw new MmlUnExpectedEndOfStringError('');
+    throw new MmlUnexpectedEndOfStringError();
   }
-  return [LAMBDA, name, ...argsReader(stream)];
+  const args = argsReader(stream);
+  if (stream.read() !== ']') {
+   throw new MmlUnmatchedBracketError();
+  }
+  return [LAMBDA, name, ...args];
 };
 
 const argsReader = (stream, isRoot = false) => {
@@ -40,9 +45,9 @@ const argsReader = (stream, isRoot = false) => {
   // `;`や`]`のときの処理
   const flush = () => {
     if (isRoot) {
-      chbuf.push(stream.read());
+      chbuf.push(stream.peek());
     } else {
-      stream.read();
+      stream.peek();
       finalizeArg();
     }
   };
@@ -79,15 +84,21 @@ const argsReader = (stream, isRoot = false) => {
         break;
       case ';':
         flush();
+        stream.read();
         break;
       case ']':
         flush();
-        return result;
+        if (!isRoot) {
+          return result;
+        } else {
+          stream.read();
+        }
       default:
         chbuf.push(stream.read());
     }
     ch = stream.peek();
   }
+  if (!isRoot) throw new MmlUnexpectedEndOfStringError();
   finalizeArg();
   return result;
 };
