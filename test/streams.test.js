@@ -1,4 +1,4 @@
-import { CharacterStream } from 'minarai-markup-notation';
+import { CharacterStream } from '../src/streams';
 
 test('`read` reads ahead from buffer', () => {
   const s = new CharacterStream('hoge');

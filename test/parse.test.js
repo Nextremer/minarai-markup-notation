@@ -1,5 +1,5 @@
+import { LAMBDA } from '../src/constants';
 import {
-  LAMBDA,
   MmlMarkupHasNoNameError,
   MmlUnexpectedEndOfStringError,
   parse
