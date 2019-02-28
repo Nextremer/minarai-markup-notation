@@ -10,9 +10,13 @@ export class MmlRendererFnConvertionError extends MmlRendererError {};
 export class MmlUnknownError extends MmlRendererError {};
 
 const renderSexpTel = (telno) => {
+  const telnoRegex = /^\+?[0-9-]+$/;
   // 電話番号はハイフンありでもよいらしい
   // https://webliker.info/65145/#toc_2
   const numericTelno = telno; // TODO: バリデーションと変換
+  if (!telnoRegex.test(telno)) {
+    throw new MmlRendererFnConvertionError(telno);
+  }
   return `<a href="tel:${numericTelno}">${telno}</a>`;
 };
 
