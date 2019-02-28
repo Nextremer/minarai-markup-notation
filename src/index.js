@@ -10,12 +10,12 @@ import {
   MmlRendererError,
   MmlInvalidSexpError,
   MmlRendererNotFoundError,
-  MmlRendererFnValueConvertionError,
+  MmlRendererFnConvertionError,
   MmlUnknownError,
   render,
 } from './renderer';
 
-module.exports = {
+export {
   MmlParseError,
   MmlMarkupHasNoNameError,
   MmlUnexpectedEndOfStringError,
@@ -23,7 +23,7 @@ module.exports = {
   MmlRendererError,
   MmlInvalidSexpError,
   MmlRendererNotFoundError,
-  MmlRendererFnValueConvertionError,
+  MmlRendererFnConvertionError,
   MmlUnknownError,
   parse,
   DEFAULT_RENDERER,

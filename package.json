@@ -2,7 +2,7 @@
   "name": "minarai-markup-notation",
   "version": "1.0.0",
   "description": "Small markup language to annotate meta information",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "jest",
     "lint": "`npm bin`/eslint ./src; exit 0;",
