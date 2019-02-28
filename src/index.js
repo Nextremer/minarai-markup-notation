@@ -3,11 +3,16 @@ import {
   MmlMarkupHasNoNameError,
   MmlUnexpectedEndOfStringError,
   MmlUnmatchedBracketError,
-  parse
+  parse,
 } from './parser';
 import {
   DEFAULT_RENDERER,
-  render
+  MmlRendererError,
+  MmlInvalidSexpError,
+  MmlRendererNotFoundError,
+  MmlRendererFnValueConvertionError,
+  MmlUnknownError,
+  render,
 } from './renderer';
 
 module.exports = {
@@ -15,6 +20,11 @@ module.exports = {
   MmlMarkupHasNoNameError,
   MmlUnexpectedEndOfStringError,
   MmlUnmatchedBracketError,
+  MmlRendererError,
+  MmlInvalidSexpError,
+  MmlRendererNotFoundError,
+  MmlRendererFnValueConvertionError,
+  MmlUnknownError,
   parse,
   DEFAULT_RENDERER,
   render

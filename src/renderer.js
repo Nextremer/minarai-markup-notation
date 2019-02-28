@@ -6,7 +6,7 @@ import {
 export class MmlRendererError extends MmlError {};
 export class MmlInvalidSexpError extends MmlRendererError {};
 export class MmlRendererNotFoundError extends MmlRendererError {};
-export class MmlRendererFnValueConvertionError extends MmlRendererError {};
+export class MmlRendererFnConvertionError extends MmlRendererError {};
 export class MmlUnknownError extends MmlRendererError {};
 
 const renderSexpTel = (telno) => {
