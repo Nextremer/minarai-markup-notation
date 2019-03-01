@@ -3,6 +3,8 @@ module.exports = {
   output: {
     path: __dirname + '/dist',
     filename: 'index.js',
+    library: 'minarai-markup-notation',
+    libraryTarget: 'umd',
   },
   devtool: 'source-map',
   resolve: {
