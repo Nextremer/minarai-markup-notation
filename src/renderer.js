@@ -24,8 +24,8 @@ const renderSexpTel = (telno) => {
 
 export const DEFAULT_RENDERER = {
   'tel': renderSexpTel,
-  [youtubeConfig.name]: renderYoutube,
-  [vimeoConfig.name]: renderVimeo
+  'youtube': renderYoutube,
+  'vimeo': renderVimeo
 };
 
 const renderLambda = (sexp, renderer) => {
