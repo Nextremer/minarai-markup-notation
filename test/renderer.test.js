@@ -2,7 +2,7 @@ import { LAMBDA } from '../src/constants';
 import {
   DEFAULT_RENDERER,
   render,
-} from 'minarai-markup-notation';
+} from '../src';
 
 const testRenderer = {
   ...DEFAULT_RENDERER,

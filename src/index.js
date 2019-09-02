@@ -13,6 +13,7 @@ import {
   MmlRendererFnConvertionError,
   MmlUnknownError,
   render,
+  rendererConfig,
 } from './renderer';
 
 export {
@@ -27,5 +28,6 @@ export {
   MmlUnknownError,
   parse,
   DEFAULT_RENDERER,
-  render
+  render,
+  rendererConfig,
 };

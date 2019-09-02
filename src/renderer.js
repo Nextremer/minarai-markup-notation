@@ -2,6 +2,8 @@ import {
   LAMBDA,
   MmlError,
 } from './constants';
+import {youtubeConfig, renderYoutube} from './renderers/renderYoutube';
+import {vimeoConfig, renderVimeo} from './renderers/renderVimeo';
 
 export class MmlRendererError extends MmlError {};
 export class MmlInvalidSexpError extends MmlRendererError {};
@@ -21,7 +23,9 @@ const renderSexpTel = (telno) => {
 };
 
 export const DEFAULT_RENDERER = {
-  'tel': renderSexpTel
+  'tel': renderSexpTel,
+  'youtube': renderYoutube,
+  'vimeo': renderVimeo
 };
 
 const renderLambda = (sexp, renderer) => {
@@ -64,4 +68,9 @@ export const render = (sexp, renderer = DEFAULT_RENDERER) => {
   } else {
     throw new MmlInvalidSexpError(sexp);
   }
+};
+
+export const rendererConfig = {
+  [youtubeConfig.name]: youtubeConfig,
+  [vimeoConfig.name]: vimeoConfig
 };
