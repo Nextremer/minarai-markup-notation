@@ -1,6 +1,7 @@
 module.exports = {
   entry: ['@babel/polyfill', __dirname + '/src/index.js'],
   output: {
+    globalObject: 'this',
     path: __dirname + '/dist',
     filename: 'index.js',
     library: 'minarai-markup-notation',
